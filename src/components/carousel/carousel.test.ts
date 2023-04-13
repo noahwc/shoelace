@@ -1,5 +1,6 @@
-import { clickOnElement } from '../../internal/test';
+import { clickOnElement, moveMouseOnElement } from '../../internal/test';
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
+import { sendMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import type SlCarousel from './carousel';
 
@@ -290,6 +291,56 @@ describe('<sl-carousel>', () => {
         expect(el.scrollContainer.scrollWidth).to.be.greaterThan(el.scrollContainer.clientWidth);
         expect(el.scrollContainer.scrollHeight).to.be.equal(el.scrollContainer.clientHeight);
       });
+    });
+  });
+
+  describe.only('when `mouse-dragging` attribute is provided', () => {
+    it('should be possible to drag the carousel using mouse', async () => {
+      // Arrange
+      const el = await fixture<SlCarousel>(html`
+        <sl-carousel mouse-dragging loop>
+          <sl-carousel-item>Node 1</sl-carousel-item>
+          <sl-carousel-item>Node 2</sl-carousel-item>
+          <sl-carousel-item>Node 3</sl-carousel-item>
+        </sl-carousel>
+      `);
+      const carouselItem = el.querySelector('sl-carousel-item') as HTMLElement;
+
+      // Act
+      await moveMouseOnElement(carouselItem, 'center');
+      await sendMouse({
+        type: 'down'
+      });
+      await moveMouseOnElement(carouselItem, 'left', -100);
+      await sendMouse({
+        type: 'up'
+      });
+
+      await oneEvent(el.scrollContainer, 'scrollend');
+      await el.updateComplete;
+
+      // Assert
+      expect(el.activeSlide).to.be.equal(1);
+    });
+
+    it('should be possible to interact with clickable elements', async () => {
+      // Arrange
+      const el = await fixture<SlCarousel>(html`
+        <sl-carousel mouse-dragging>
+          <sl-carousel-item><button>test</button></sl-carousel-item>
+          <sl-carousel-item>Node 2</sl-carousel-item>
+          <sl-carousel-item>Node 3</sl-carousel-item>
+        </sl-carousel>
+      `);
+      const button = el.querySelector('button') as HTMLElement;
+      const clickSpy = sinon.spy();
+      button.addEventListener('click', clickSpy);
+
+      // Act
+      await clickOnElement(button);
+
+      // Assert
+      expect(clickSpy).to.have.been.called;
     });
   });
 
