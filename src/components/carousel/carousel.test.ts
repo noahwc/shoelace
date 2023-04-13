@@ -1,6 +1,6 @@
 import { clickOnElement, moveMouseOnElement } from '../../internal/test';
 import { expect, fixture, html, oneEvent } from '@open-wc/testing';
-import { sendMouse } from '@web/test-runner-commands';
+import { resetMouse, sendMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import type SlCarousel from './carousel';
 
@@ -294,11 +294,11 @@ describe('<sl-carousel>', () => {
     });
   });
 
-  describe.only('when `mouse-dragging` attribute is provided', () => {
+  describe('when `mouse-dragging` attribute is provided', () => {
     it('should be possible to drag the carousel using mouse', async () => {
       // Arrange
       const el = await fixture<SlCarousel>(html`
-        <sl-carousel mouse-dragging loop>
+        <sl-carousel mouse-dragging>
           <sl-carousel-item>Node 1</sl-carousel-item>
           <sl-carousel-item>Node 2</sl-carousel-item>
           <sl-carousel-item>Node 3</sl-carousel-item>
@@ -311,7 +311,9 @@ describe('<sl-carousel>', () => {
       await sendMouse({
         type: 'down'
       });
-      await moveMouseOnElement(carouselItem, 'left', -100);
+      await moveMouseOnElement(carouselItem, 'center', -10);
+      await new Promise(r => setTimeout(r, 100));
+      await moveMouseOnElement(carouselItem, 'center', -carouselItem.offsetWidth);
       await sendMouse({
         type: 'up'
       });
@@ -327,16 +329,18 @@ describe('<sl-carousel>', () => {
       // Arrange
       const el = await fixture<SlCarousel>(html`
         <sl-carousel mouse-dragging>
-          <sl-carousel-item><button>test</button></sl-carousel-item>
+          <sl-carousel-item><button>click me</button></sl-carousel-item>
           <sl-carousel-item>Node 2</sl-carousel-item>
           <sl-carousel-item>Node 3</sl-carousel-item>
         </sl-carousel>
       `);
-      const button = el.querySelector('button') as HTMLElement;
+      const button = el.querySelector('button')!;
+
       const clickSpy = sinon.spy();
       button.addEventListener('click', clickSpy);
 
       // Act
+      await moveMouseOnElement(button);
       await clickOnElement(button);
 
       // Assert
