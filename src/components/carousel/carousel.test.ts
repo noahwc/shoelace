@@ -5,6 +5,10 @@ import sinon from 'sinon';
 import type SlCarousel from './carousel';
 
 describe('<sl-carousel>', () => {
+  afterEach(async () => {
+    await resetMouse();
+  });
+
   it('should render a carousel with default configuration', async () => {
     // Arrange
     const el = await fixture(html`
@@ -307,13 +311,16 @@ describe('<sl-carousel>', () => {
       const carouselItem = el.querySelector('sl-carousel-item') as HTMLElement;
 
       // Act
-      await moveMouseOnElement(carouselItem, 'center');
+      await moveMouseOnElement(carouselItem, 'right');
       await sendMouse({
         type: 'down'
       });
-      await moveMouseOnElement(carouselItem, 'center', -10);
-      await new Promise(r => setTimeout(r, 100));
-      await moveMouseOnElement(carouselItem, 'center', -carouselItem.offsetWidth);
+
+      // For some reason it seems necessary to move the mouse back and forth to trigger a move event
+      await moveMouseOnElement(carouselItem, 'left');
+      await moveMouseOnElement(carouselItem, 'right');
+      await moveMouseOnElement(carouselItem, 'left');
+
       await sendMouse({
         type: 'up'
       });
