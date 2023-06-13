@@ -148,7 +148,7 @@ Consumers of the library should never need to worry about preprocessing the libr
 
 ### Positioning Popovers
 
-Shoelace uses an internal popover utility for dropdowns, tooltips, etc. This is a light abstraction of Popper.js designed to make positioning and transitioning things easy and consistent throughout the library. When possible, use this utility instead of relying on Popper directly. See `src/utilities/popover.ts` for details.
+Shoelace uses an internal sl_popover utility for dropdowns, tooltips, etc. This is a light abstraction of Popper.js designed to make positioning and transitioning things easy and consistent throughout the library. When possible, use this utility instead of relying on Popper directly. See `src/utilities/sl_popover.ts` for details.
 
 ### Host and Base Elements
 

@@ -70,7 +70,7 @@
     transform-origin: left;
   }
 
-  &.popover-visible .tooltip {
+  &.sl_popover-visible .tooltip {
     opacity: 1;
     transform: none;
     transition-delay: var(--show-delay);

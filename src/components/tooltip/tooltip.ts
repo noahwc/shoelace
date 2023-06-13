@@ -2,7 +2,7 @@ import { LitElement, html, property, query, unsafeCSS } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map';
 import { event, EventEmitter, tag, watch } from '../../internal/decorators';
 import styles from 'sass:./tooltip.scss';
-import Popover from '../../internal/popover';
+import SlPopover from '../../internal/sl_popover';
 
 let id = 0;
 
@@ -24,7 +24,7 @@ export default class SlTooltip extends LitElement {
 
   private componentId = `tooltip-${++id}`;
   private target: HTMLElement;
-  private popover: Popover;
+  private sl_popover: SlPopover;
 
   private isVisible = false;
 
@@ -82,7 +82,7 @@ export default class SlTooltip extends LitElement {
 
   firstUpdated() {
     this.target = this.getTarget();
-    this.popover = new Popover(this.target, this.positioner);
+    this.sl_popover = new SlPopover(this.target, this.positioner);
     this.syncOptions();
 
     this.addEventListener('blur', this.handleBlur.bind(this), true);
@@ -101,7 +101,7 @@ export default class SlTooltip extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.popover.destroy();
+    this.sl_popover.destroy();
     this.removeEventListener('blur', this.handleBlur, true);
     this.removeEventListener('click', this.handleClick, true);
     this.removeEventListener('focus', this.handleFocus, true);
@@ -122,7 +122,7 @@ export default class SlTooltip extends LitElement {
 
     this.isVisible = true;
     this.open = true;
-    this.popover.show();
+    this.sl_popover.show();
   }
 
   /** Shows the tooltip. */
@@ -140,7 +140,7 @@ export default class SlTooltip extends LitElement {
 
     this.isVisible = false;
     this.open = false;
-    this.popover.hide();
+    this.sl_popover.hide();
   }
 
   getTarget() {
@@ -225,8 +225,8 @@ export default class SlTooltip extends LitElement {
   }
 
   syncOptions() {
-    if (this.popover) {
-      this.popover.setOptions({
+    if (this.sl_popover) {
+      this.sl_popover.setOptions({
         placement: this.placement,
         distance: this.distance,
         skidding: this.skidding,
