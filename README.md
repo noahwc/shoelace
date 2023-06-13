@@ -1,3 +1,5 @@
+This fork was created from v2.0.0-beta.32 of shoelace. It is maintained by Saasquatch and aims to remain backwards compatible with shoelace v2.0.0-beta.32 while providing bugfixes for modern browsers.
+
 # Shoelace
 
 A forward-thinking library of web components.
