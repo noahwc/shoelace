@@ -1,8 +1,8 @@
 {
-  "name": "@shoelace-style/shoelace",
+  "name": "@saasquatch/shoelace",
   "description": "A forward-thinking library of web components.",
-  "version": "2.0.0-beta.32",
-  "homepage": "https://github.com/shoelace-style/shoelace",
+  "version": "1.0.0",
+  "homepage": "https://github.com/saasquatch/shoelace",
   "author": "Cory LaViska",
   "license": "MIT",
   "main": "dist/shoelace.js",
@@ -19,10 +19,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shoelace-style/shoelace.git"
+    "url": "git+https://github.com/saasquatch/shoelace.git"
   },
   "bugs": {
-    "url": "https://github.com/shoelace-style/shoelace/issues"
+    "url": "https://github.com/saasquatch/shoelace/issues"
   },
   "funding": {
     "type": "individual",

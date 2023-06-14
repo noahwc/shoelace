@@ -8,7 +8,7 @@
 // - The popover MUST have at least one property that transitions, otherwise transitionEnd won't fire and the popover
 //   won't be hidden. If transitions are delegated to a child element, set the `transitionElement` property accordingly.
 //
-// - When the popover is shown, it's assigned `PopoverOptions.visibleClass`. You can use this class to provide different
+// - When the popover is shown, it's assigned `SlPopoverOptions.visibleClass`. You can use this class to provide different
 //   transitions for show/hide.
 //
 // - Popper uses `translate3d` to position elements, so adding a transition to the `transform` property may have an
@@ -16,26 +16,26 @@
 //
 import { Instance as PopperInstance, createPopper } from '@popperjs/core/dist/esm';
 
-export default class Popover {
+export default class SlPopover {
   anchor: HTMLElement;
   isVisible: boolean;
-  popover: HTMLElement;
+  sl_popover: HTMLElement;
   popper: PopperInstance;
-  options: PopoverOptions;
+  options: SlPopoverOptions;
 
-  constructor(anchor: HTMLElement, popover: HTMLElement, options?: PopoverOptions) {
+  constructor(anchor: HTMLElement, sl_popover: HTMLElement, options?: SlPopoverOptions) {
     this.handleTransitionEnd = this.handleTransitionEnd.bind(this);
 
     this.anchor = anchor;
-    this.popover = popover;
+    this.sl_popover = sl_popover;
     this.options = Object.assign(
       {
         skidding: 0,
         distance: 0,
         placement: 'bottom-start',
         strategy: 'absolute',
-        transitionElement: this.popover,
-        visibleClass: 'popover-visible',
+        transitionElement: this.sl_popover,
+        visibleClass: 'sl_popover-visible',
         onAfterShow: () => {},
         onAfterHide: () => {},
         onTransitionEnd: () => {}
@@ -44,10 +44,10 @@ export default class Popover {
     );
 
     this.isVisible = false;
-    this.popover.hidden = true;
-    this.popover.classList.remove(this.options.visibleClass!);
+    this.sl_popover.hidden = true;
+    this.sl_popover.classList.remove(this.options.visibleClass!);
 
-    this.popover.addEventListener('transitionend', this.handleTransitionEnd);
+    this.sl_popover.addEventListener('transitionend', this.handleTransitionEnd);
   }
 
   handleTransitionEnd(event: TransitionEvent) {
@@ -60,16 +60,16 @@ export default class Popover {
       this.options.onTransitionEnd!.call(this, event);
 
       // Make sure we only do this once, since transitionend will fire for every transition
-      if (!this.isVisible && !this.popover.hidden) {
-        this.popover.hidden = true;
-        this.popover.classList.remove(this.options.visibleClass!);
+      if (!this.isVisible && !this.sl_popover.hidden) {
+        this.sl_popover.hidden = true;
+        this.sl_popover.classList.remove(this.options.visibleClass!);
         this.options.onAfterHide!.call(this);
       }
     }
   }
 
   destroy() {
-    this.popover.removeEventListener('transitionend', this.handleTransitionEnd);
+    this.sl_popover.removeEventListener('transitionend', this.handleTransitionEnd);
 
     if (this.popper) {
       this.popper.destroy();
@@ -78,15 +78,15 @@ export default class Popover {
 
   show() {
     this.isVisible = true;
-    this.popover.hidden = false;
-    this.popover.clientWidth; // force reflow
-    requestAnimationFrame(() => this.popover.classList.add(this.options.visibleClass!));
+    this.sl_popover.hidden = false;
+    this.sl_popover.clientWidth; // force reflow
+    requestAnimationFrame(() => this.sl_popover.classList.add(this.options.visibleClass!));
 
     if (this.popper) {
       this.popper.destroy();
     }
 
-    this.popper = createPopper(this.anchor, this.popover, {
+    this.popper = createPopper(this.anchor, this.sl_popover, {
       placement: this.options.placement,
       strategy: this.options.strategy,
       modifiers: [
@@ -105,7 +105,7 @@ export default class Popover {
       ]
     });
 
-    this.popover.addEventListener('transitionend', () => this.options.onAfterShow!.call(this), { once: true });
+    this.sl_popover.addEventListener('transitionend', () => this.options.onAfterShow!.call(this), { once: true });
 
     // Reposition the menu after it appears in case a modifier kicked in
     requestAnimationFrame(() => this.popper.update());
@@ -114,18 +114,18 @@ export default class Popover {
   hide() {
     // Apply the hidden styles and wait for the transition before hiding completely
     this.isVisible = false;
-    this.popover.classList.remove(this.options.visibleClass!);
+    this.sl_popover.classList.remove(this.options.visibleClass!);
   }
 
   reposition() {
     this.popper.update();
   }
 
-  setOptions(options: PopoverOptions) {
+  setOptions(options: SlPopoverOptions) {
     this.options = Object.assign(this.options, options);
     this.isVisible
-      ? this.popover.classList.add(this.options.visibleClass!)
-      : this.popover.classList.remove(this.options.visibleClass!);
+      ? this.sl_popover.classList.add(this.options.visibleClass!)
+      : this.sl_popover.classList.remove(this.options.visibleClass!);
 
     // Update popper options
     if (this.popper) {
@@ -139,7 +139,7 @@ export default class Popover {
   }
 }
 
-interface PopoverOptions {
+interface SlPopoverOptions {
   distance?: number;
   placement?:
     | 'auto'

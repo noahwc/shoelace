@@ -5,7 +5,7 @@ import styles from 'sass:./dropdown.scss';
 import { SlMenu, SlMenuItem } from '../../shoelace';
 import { scrollIntoView } from '../../internal/scroll';
 import { getNearestTabbableElement } from '../../internal/tabbable';
-import Popover from '../../internal/popover';
+import SlPopover from '../../internal/sl_popover';
 
 let id = 0;
 
@@ -30,7 +30,7 @@ export default class SlDropdown extends LitElement {
 
   private componentId = `dropdown-${++id}`;
   private isVisible = false;
-  private popover: Popover;
+  private sl_popover: SlPopover;
 
   /** Indicates whether or not the dropdown is open. You can use this in lieu of the show/hide methods. */
   @property({ type: Boolean, reflect: true }) open = false;
@@ -96,7 +96,7 @@ export default class SlDropdown extends LitElement {
   }
 
   firstUpdated() {
-    this.popover = new Popover(this.trigger, this.positioner, {
+    this.sl_popover = new SlPopover(this.trigger, this.positioner, {
       strategy: this.hoist ? 'fixed' : 'absolute',
       placement: this.placement,
       distance: this.distance,
@@ -120,7 +120,7 @@ export default class SlDropdown extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.hide();
-    this.popover.destroy();
+    this.sl_popover.destroy();
   }
 
   focusOnTrigger() {
@@ -204,9 +204,9 @@ export default class SlDropdown extends LitElement {
   @watch('hoist')
   @watch('placement')
   @watch('skidding')
-  handlePopoverOptionsChange() {
-    if (this.popover) {
-      this.popover.setOptions({
+  handleSlPopoverOptionsChange() {
+    if (this.sl_popover) {
+      this.sl_popover.setOptions({
         strategy: this.hoist ? 'fixed' : 'absolute',
         placement: this.placement,
         distance: this.distance,
@@ -325,7 +325,7 @@ export default class SlDropdown extends LitElement {
 
     this.isVisible = true;
     this.open = true;
-    this.popover.show();
+    this.sl_popover.show();
   }
 
   /** Hides the dropdown panel */
@@ -348,7 +348,7 @@ export default class SlDropdown extends LitElement {
 
     this.isVisible = false;
     this.open = false;
-    this.popover.hide();
+    this.sl_popover.hide();
   }
 
   /**
@@ -360,7 +360,7 @@ export default class SlDropdown extends LitElement {
       return;
     }
 
-    this.popover.reposition();
+    this.sl_popover.reposition();
   }
 
   @watch('open')
